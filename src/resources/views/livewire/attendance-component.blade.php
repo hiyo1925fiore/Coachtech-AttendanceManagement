@@ -11,12 +11,12 @@
 
     <div class="button-container">
         @if($currentStatus === 'before_work')
-            <button wire:click="startWork" class="button__primary">出勤</button>
+            <button wire:click="startWork" class="button__attendance">出勤</button>
         @elseif($currentStatus === 'working')
-            <button wire:click="endWork" class="button__primary">退勤</button>
-            <button wire:click="startBreak" class="button__secondary">休憩入</button>
+            <button wire:click="endWork" class="button__attendance">退勤</button>
+            <button wire:click="startBreak" class="button__break-time">休憩入</button>
         @elseif($currentStatus === 'on_break')
-            <button wire:click="endBreak" class="button__primary">休憩戻</button>
+            <button wire:click="endBreak" class="button__break-time">休憩戻</button>
         @elseif($currentStatus === 'finished')
             <div class="completion-message">お疲れ様でした。</div>
         @endif

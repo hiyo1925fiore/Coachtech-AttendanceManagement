@@ -1,0 +1,78 @@
+.content {
+    height: 100vh;
+    font-family: "Inter";
+    font-optical-sizing: auto;
+    font-style: normal;
+    padding: 209px 0 0;
+}
+
+.attendance-register-content {
+    text-align: center;
+}
+
+.status-display {
+    margin: 0 auto;
+    width: 100px;
+    height: 40px;
+    background-color: #c8c8c8;
+    border-radius: 50px;
+}
+
+.status-badge {
+    line-height: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #696969;
+}
+
+.date-time-display {
+    margin: 41px 0 87px;
+    height: 177px;
+}
+
+.date {
+    margin: 0 0 32px;
+    height: 48px;
+    font-size: 40px;
+    font-weight: 400;
+    color: #000;
+}
+
+.time {
+    height: 97px;
+    font-size: 80px;
+    font-weight: 700;
+    color: #000;
+}
+
+.button-container {
+    display: flex;
+    gap: 82px;
+    justify-content: center;
+    align-items: center;
+}
+
+.button__attendance,
+.button__break-time {
+    width: 221px;
+    height: 77px;
+    font-size: 32px;
+    font-weight: 700;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.button__attendance {
+    background-color: #000;
+    color: #fff;
+}
+
+.button__break-time {
+    background-color: #fff;
+    color: #000;
+}
+
+.completion-message {
+    font-size: 26px;
+    font-weight: 700;
+}

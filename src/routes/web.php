@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Livewire\AttendanceComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,6 @@ Route::post('/login', [UserController::class, 'loginUser']);
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 
-    Route::get('/attendance', function () {
-    return view('attendance_register');
-})->name('attendance.register');
+    Route::get('/attendance', [AttendanceController::class, 'index'])
+        ->name('attendance.register');
 });
