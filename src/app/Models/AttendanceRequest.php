@@ -22,6 +22,11 @@ class AttendanceRequest extends Model
         'is_approved',
     ];
 
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

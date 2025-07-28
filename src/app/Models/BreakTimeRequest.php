@@ -14,7 +14,7 @@ class BreakTimeRequest extends Model
     ];
 
     protected $fillable = [
-        'attendance_id',
+        'attendance_request_id',
         'break_time_id',
         'start_time',
         'end_time',

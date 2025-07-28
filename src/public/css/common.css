@@ -22,11 +22,11 @@
 
 .header__nav {
     margin-right: 46px;
+    display: flex;
 }
 
 .header__list {
     display: flex;
-    align-items: center;
 }
 
 .header__link {
@@ -35,6 +35,11 @@
     font-weight: 700;
     color: #fff;
     text-decoration: none;
+}
+
+.header__list-item--logout {
+    display: flex;
+    align-items: center;
 }
 
 .header__form--logout {

@@ -33,28 +33,4 @@ class BreakTime extends Model
     {
         return $this->hasMany(BreakTimeRequest::class);
     }
-
-    // 休憩時間を秒単位で取得
-    public function getDurationAttribute()
-    {
-        if (!$this->start_time || !$this->end_time) {
-            return null;
-        }
-
-        return $this->end_time->diffInSeconds($this->start_time);
-    }
-
-    // 休憩時間を時間:分の形式で取得
-    public function getFormattedDurationAttribute()
-    {
-        $seconds = $this->duration;
-        if ($seconds === null) {
-            return null;
-        }
-
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-
-        return sprintf('%02d:%02d', $hours, $minutes);
-    }
 }

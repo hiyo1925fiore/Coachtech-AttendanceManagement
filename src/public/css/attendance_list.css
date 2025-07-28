@@ -1,0 +1,134 @@
+.content {
+    font-family: "Inter";
+    font-optical-sizing: auto;
+    font-style: normal;
+    padding: 91px 0 114px;
+    background-color: #f0eff2;
+}
+
+.heading-title {
+    width: 900px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.heading-title__text {
+    margin: 0;
+    line-height: 40px;
+    border-left: 8px solid #000000;
+    padding: 0px 21px;
+    font-weight: 700;
+    font-size: 30px;
+    color: #000;
+}
+
+.pagination-by-month {
+    width: 900px;
+    height: 60px;
+    margin: 43px auto 46px;
+    padding: 0 25px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.pagination-link {
+    line-height: 60px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #737373;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.arrow-icon--left {
+    margin-right: 7px;
+}
+
+.current-date {
+    line-height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.calendar-icon {
+    margin-right: 11px;
+    width: 25px;
+    height: 25px;
+}
+
+.current-date__text {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+}
+
+.arrow-icon--right {
+    margin-left: 7px;
+    transform: rotate(180deg);
+}
+
+.attendance__table {
+    width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    color: #737373;
+    border-radius: 10px;
+}
+
+.attendance__table-header--row,
+.attendance__table--row {
+    height: 46px;
+}
+
+.attendance__table-header--row {
+    border-bottom: 3px solid #e1e1e1;
+}
+
+.table-header--date,
+.table-header--items,
+.table-header--detail,
+.table-content--date,
+.table-content--items {
+    text-align: left;
+}
+
+.table-header--date {
+    padding-left: 57px;
+    width: 200px;
+}
+
+.table-header--items {
+    padding-left: 47px;
+    width: 140px;
+}
+
+.table-header--detail,
+.table-content--detail {
+    padding-left: 17px;
+    width: 140px;
+}
+
+.attendance__table--row:not(:last-child) {
+    border-bottom: 2px solid #e1e1e1;
+}
+
+.table-content--date {
+    padding-left: 55px;
+    width: 200px;
+}
+
+.table-content--items {
+    padding-left: 39px;
+    width: 140px;
+}
+
+.detail-link {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

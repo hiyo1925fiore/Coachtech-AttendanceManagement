@@ -19,6 +19,9 @@ class AttendanceComponent extends Component
     {
         $this->selectedDate = Carbon::today()->isoFormat('YYYY年M月D日(ddd)');
         $this->checkTodayStatus();
+
+        // 初期ステータスをヘッダーに通知（少し遅延させてJavaScriptが準備完了してから送信）
+        $this->dispatchBrowserEvent('initial-status', ['status' => $this->currentStatus]);
     }
 
     public function checkTodayStatus()
@@ -39,7 +42,16 @@ class AttendanceComponent extends Component
                 ->first();
         }
 
-        // 現在の状態を判定
+        // ステータスの判定
+        $this->determineCurrentStatus();
+
+        // ステータスをヘッダーに通知（ブラウザイベントとLivewireイベント両方を送信）
+        $this->emit('statusUpdated', $this->currentStatus);
+        $this->dispatchBrowserEvent('status-updated', ['status' => $this->currentStatus]);
+    }
+
+    private function determineCurrentStatus()
+    {
         if (!$this->todayAttendance) {
             $this->currentStatus = 'before_work';
         } elseif ($this->todayAttendance->end_time) {
@@ -68,6 +80,9 @@ class AttendanceComponent extends Component
 
         $this->currentStatus = 'working';
         $this->emit('statusChanged', '出勤しました');
+
+        // ステータスをヘッダーに通知
+        $this->emit('statusUpdated', $this->currentStatus);
     }
 
     public function endWork()
@@ -87,6 +102,9 @@ class AttendanceComponent extends Component
 
             $this->currentStatus = 'finished';
             $this->emit('statusChanged', 'お疲れ様でした。');
+
+            // ステータスをヘッダーに通知
+        $this->emit('statusUpdated', $this->currentStatus);
         }
     }
 
@@ -102,6 +120,9 @@ class AttendanceComponent extends Component
             $this->currentStatus = 'on_break';
             $this->emit('statusChanged', '休憩に入りました');
         }
+
+        // ステータスをヘッダーに通知
+        $this->emit('statusUpdated', $this->currentStatus);
     }
 
     public function endBreak()
@@ -115,6 +136,9 @@ class AttendanceComponent extends Component
             $this->currentStatus = 'working';
             $this->emit('statusChanged', '休憩から戻りました');
         }
+
+        // ステータスをヘッダーに通知
+        $this->emit('statusUpdated', $this->currentStatus);
     }
 
     public function getCurrentTime()

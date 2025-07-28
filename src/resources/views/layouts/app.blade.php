@@ -19,7 +19,8 @@
             <img src="{{asset('image/CoachTech_White 1.png')}}" alt="COACHTECH" class="header__logo">
             <nav class="header__nav">
                 <ul class="header__list">
-                <li class="header__list-item">
+                    <!-- 初期状態のヘッダー（JavaScriptで更新される） -->
+                    <li class="header__list-item">
                         <a class="header__link" href="/attendance">勤怠</a>
                     </li>
 
@@ -30,20 +31,23 @@
                     <li class="header__list-item">
                         <a class="header__link" href="/stamp_correction_request/list">申請</a>
                     </li>
-
-                    <li class="header__list-item">
-                        <form action="/logout" class="header__form" method="post">
-                            @csrf
-                            <button class="header__form--logout" type="submit">ログアウト</button>
-                        </form>
-                    </li>
                 </ul>
+
+                <!-- ログアウトフォーム -->
+                <li class="header__list-item--logout">
+                    <form action="/logout" class="header__form" method="post">
+                        @csrf
+                        <button class="header__form--logout" type="submit">ログアウト</button>
+                    </form>
+                </li>
             </nav>
         </div>
     </header>
 
     <main>
         @yield('content')
+        <!-- 勤務状況に応じてヘッダーを更新する -->
+        <script src="{{ asset('js/header-status.js') }}"></script>
     </main>
     @livewireScripts()
 </body>
