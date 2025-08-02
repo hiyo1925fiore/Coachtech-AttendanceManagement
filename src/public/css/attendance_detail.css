@@ -1,0 +1,154 @@
+.content {
+    height: calc(100vh - 80px);
+    font-family: "Inter";
+    font-optical-sizing: auto;
+    font-style: normal;
+    padding: 93px 0 114px;
+    background-color: #f0eff2;
+}
+
+.heading-title {
+    width: 900px;
+    height: 40px;
+    margin: 0 auto 55px;
+}
+
+.heading-title__text {
+    margin: 0;
+    line-height: 40px;
+    border-left: 8px solid #000000;
+    padding: 0px 21px;
+    font-weight: 700;
+    font-size: 30px;
+    color: #000;
+}
+
+.attendance-detail {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.attendance-detail__table {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.table-row {
+}
+
+.table-row:not(:last-child) {
+    border-bottom: 2px solid #e1e1e1;
+}
+
+.table-header {
+    width: 333px;
+    padding-left: 64px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 700;
+    color: #737373;
+}
+
+[class^="table-content--"] {
+    width: 316px;
+    margin-right: 275px;
+}
+
+.table-content--name {
+    height: 79px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-data__text,
+.table-data__text--time,
+.wave-dash {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+}
+
+.table-content--date {
+    height: 89px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-content--attendance {
+    height: 91px;
+}
+
+.table-data__inner {
+    width: 316px;
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-data__input--time {
+    width: 103px;
+    height: 28px;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.table-data__input--time::-webkit-calendar-picker-indicator {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.table-content--break-time {
+    height: 95px;
+}
+
+.table-content--note {
+    height: 106px;
+    padding-top: 9px;
+}
+
+.table-data__textarea {
+    width: 316px;
+    height: 72px;
+    padding: 9px 13px;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    resize: none;
+}
+
+.comment__waiting-for-approval {
+    margin: 25px 0 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: rgba(255, 0, 0, 0.5);
+    text-align: right;
+}
+
+.correction-request-form__button {
+    height: 50px;
+    margin-top: 36px;
+    text-align: right;
+}
+
+.correction-request-form__button-submit {
+    width: 130px;
+    height: 100%;
+    background-color: #000;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 5px;
+}

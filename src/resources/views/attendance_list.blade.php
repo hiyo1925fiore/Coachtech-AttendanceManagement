@@ -41,51 +41,54 @@
         </tr>
 
         @foreach($attendanceData as $data)
-            <tr class="attendance__table--row">
-                <!-- 日付 -->
-                <td class="table-content--date">
-                    {{ $data['date']->format('m/d') }}
-                    {{ ['(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)'][$data['date']->dayOfWeek] }}
-                </td>
+        <tr class="attendance__table--row">
+            <!-- 日付 -->
+            <td class="table-content--date">
+                {{ $data['date']->format('m/d') }}
+                {{ ['(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)'][$data['date']->dayOfWeek] }}
+            </td>
 
-                <!-- 出勤時間 -->
-                <td class="table-content--items">
-                    @if($data['attendance'] && $data['attendance']->start_time)
-                        {{ \Carbon\Carbon::parse($data['attendance']->start_time)->format('H:i') }}
-                    @endif
-                </td>
+            <!-- 出勤時間 -->
+            <td class="table-content--items">
+                @if($data['attendance'] && $data['attendance']->start_time)
+                    {{ \Carbon\Carbon::parse($data['attendance']->start_time)->format('H:i') }}
+                @endif
+            </td>
 
-                <!-- 退勤時間 -->
-                <td class="table-content--items">
-                    @if($data['attendance'] && $data['attendance']->end_time)
-                        {{ \Carbon\Carbon::parse($data['attendance']->end_time)->format('H:i') }}
-                    @endif
-                </td>
+            <!-- 退勤時間 -->
+            <td class="table-content--items">
+                @if($data['attendance'] && $data['attendance']->end_time)
+                    {{ \Carbon\Carbon::parse($data['attendance']->end_time)->format('H:i') }}
+                @endif
+            </td>
 
-                <!-- 休憩時間 -->
-                <td class="table-content--items">
-                    @if($data['break_time'] !== null)
-                        {{ floor($data['break_time'] / 60) }}:{{ sprintf('%02d', $data['break_time'] % 60) }}
-                    @endif
-                </td>
+            <!-- 休憩時間 -->
+            <td class="table-content--items">
+                @if($data['break_time'] !== null && $data['attendance']->start_time)
+                    {{ floor($data['break_time'] / 60) }}:{{ sprintf('%02d', $data['break_time'] % 60) }}
+                @endif
+            </td>
 
-                <!-- 労働時間 -->
-                <td class="table-content--items">
-                    @if($data['work_time'] !== null)
-                        {{ floor($data['work_time'] / 60) }}:{{ sprintf('%02d', $data['work_time'] % 60) }}
-                    @endif
-                </td>
+            <!-- 労働時間 -->
+            <td class="table-content--items">
+                @if($data['work_time'] !== null)
+                    {{ floor($data['work_time'] / 60) }}:{{ sprintf('%02d', $data['work_time'] % 60) }}
+                @endif
+            </td>
 
-                <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
-                <td class="table-content--detail">
-                    @if($data['attendance'])
-                        <a href="{{ route('attendance.detail', $data['attendance']->id) }}" class="detail-link">
-                            詳細
-                        </a>
-                    @else
-                    @endif
-                </td>
-            </tr>
+            <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
+            <td class="table-content--detail">
+                @if($data['attendance'])
+                    <a href="{{ route('attendance.detail', ['date' => $data['date']->format('Y-m-d')]) }}" class="detail-link">
+                        詳細
+                    </a>
+                @else
+                    <a href="{{ route('attendance.detail', ['date' => $data['date']->format('Y-m-d')]) }}" class="detail-link">
+                        詳細
+                    </a>
+                @endif
+            </td>
+        </tr>
         @endforeach
     </table>
 </div>

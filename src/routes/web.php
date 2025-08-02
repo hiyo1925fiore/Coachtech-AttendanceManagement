@@ -26,7 +26,11 @@ Route::middleware('auth')->group(function () {
         ->name('attendance.register');
     Route::get('/attendance/list', [AttendanceController::class, 'showAttendanceList'])
         ->name('attendance.list');
-    Route::get('/attendance/detail/{attendance_id}',[AttendanceController::class,'showDetail'])
-    ->name('attendance.detail');
-    Route::put('/attendance/detail/{attendance_id}', [AttendanceController::class, 'postRequest'])->name('attendance.correct');
+    Route::get('/attendance/detail/{date}',[AttendanceController::class,'showDetail'])
+        ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        ->name('attendance.detail');
+    Route::put('/attendance/detail/{date}', [AttendanceController::class, 'postRequest'])
+        ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        ->name('attendance.correct');
+    Route::get('/stamp_correction_request/list', [AttendanceController::class, 'showRequestList'])->name('requests.list');
 });

@@ -1,144 +1,172 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance_detail.css') }}">
 @endsection
 
 @section('content')
 <div class="content">
     <div class="heading-title">
-        <div class="vertical-rule"></div>
         <h1 class="heading-title__text">勤怠詳細</h1>
     </div>
 
-    {{-- デバッグ用 --}}
-@if($errors->any())
-    <div style="background: red; color: white; padding: 10px;">
-        <h3>All Errors:</h3>
-        @foreach($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
-
-        <h3>Error Bag:</h3>
-        <pre>{{ print_r($errors->toArray(), true) }}</pre>
-    </div>
-@endif
-
     <div class="attendance-detail">
-        <form class="correction-request-form" action="/attendance/detail/{{$attendance->id}}" method="post">
+        <form class="correction-request-form" action="/attendance/detail/{{$date}}" method="post">
             @csrf
             @method('PUT')
             <table class="attendance-detail__table">
-                <tr class="attendance-detail__row">
-                    <th class="attendance-detail__inner-title">名前</th>
-                    <td>{{ $attendance->user->name }}</td>
-                </tr>
-
-                <tr class="attendance-detail__row">
-                    <th class="attendance-detail__inner-title">日付</th>
-                    <td>
-                        <p>{{ $attendance->date->format('Y年') }}</p>
-                        <p>{{ $attendance->date->format('n月j日') }}</p>
+                <tr class="table-row">
+                    <th class="table-header">名前</th>
+                    <td class="table-content--name">
+                        <p class="table-data__text">{{ $attendance->user->name }}</p>
                     </td>
                 </tr>
 
-                <tr class="attendance-detail__row">
-                    <th class="attendance-detail__inner-title">出勤・退勤</th>
-                    <td>
-                        <input
-                            type="time"
-                            name="start_time"
-                            id="start_time"
-                            value="{{ old('start_time', $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '') }}">
-                        ～
-                        <input
-                            type="time"
-                            name="end_time"
-                            id="end_time"
-                            value="{{ old('end_time', $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '') }}">
-
-                        <p class="form__error">
-                            @error('start_time')
-                                {{ $message }}
-                            @enderror
-                        </p>
-                        <p class="form__error">
-                            @error('end_time')
-                                {{ $message }}
-                            @enderror
-                        </p>
+                <tr class="table-row">
+                    <th class="table-header">日付</th>
+                    <td class="table-content--date">
+                        <p class="table-data__text">{{ $attendance->date->format('Y年') }}</p>
+                        <p class="table-data__text">{{ $attendance->date->format('n月j日') }}</p>
                     </td>
                 </tr>
 
-                @foreach($attendance->breakTimes as $index => $breakTime)
-                <tr class="attendance-detail__row">
-                    <th class="attendance-detail__inner-title">{{ $index == 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
-                    <td>
-                        <input
-                            type="time"
-                            name="break_times[{{ $index }}][start_time]"
-                            value="{{ old("break_times.{$index}.start_time", $breakTime->start_time ? \Carbon\Carbon::parse($breakTime->start_time)->format('H:i') : '') }}">
-                        <span>～</span>
-                        <input
-                            type="time"
-                            name="break_times[{{ $index }}][end_time]"
-                            value="{{ old("break_times.{$index}.end_time", $breakTime->end_time ? \Carbon\Carbon::parse($breakTime->end_time)->format('H:i') : '') }}">
+                <tr class="table-row">
+                    <th class="table-header">出勤・退勤</th>
+                    <td class="table-content--attendance">
+                        @if($hasUnapprovedRequest)
+                            <div class="table-data__inner">
+                                <p class="table-data__text--time">{{ $unapprovedRequest->start_time ? \Carbon\Carbon::parse($unapprovedRequest->start_time)->format('H:i') : '' }}</p>
+                                <span class="wave-dash">～</span>
+                                <p class="table-data__text--time">{{ $unapprovedRequest->end_time ? \Carbon\Carbon::parse($unapprovedRequest->end_time)->format('H:i') : '' }}</p>
+                            </div>
+                        @else
+                            <div class="table-data__inner">
+                                <input
+                                    class="table-data__input--time"
+                                    type="time"
+                                    name="start_time"
+                                    id="start_time"
+                                    value="{{ old('start_time', $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '') }}">
+                                <span class="wave-dash">～</span>
+                                <input
+                                    class="table-data__input--time"
+                                    type="time"
+                                    name="end_time"
+                                    id="end_time"
+                                    value="{{ old('end_time', $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '') }}">
+                            </div>
 
-                        <p class="form__error">
-                            @if($errors->has("break_times.{$index}.start_time"))
-                                {{ $errors->first("break_times.{$index}.start_time") }}
-                            @endif
-                        </p>
-                        <p class="form__error">
-                            @if($errors->has("break_times.{$index}.end_time"))
-                                {{ $errors->first("break_times.{$index}.end_time") }}
-                            @endif
-                        </p>
-                    </td>
-                </tr>
-                @endforeach
-
-                <!-- 新規入力欄（空白）-->
-                @php
-                    $newIndex = count($attendance->breakTimes);
-                    $newLabelNumber = $newIndex + 1;
-                @endphp
-                <tr class="attendance-detail__row">
-                    <th class="attendance-detail__inner-title">{{ $newIndex == 0 ? '休憩' : '休憩' . ($newLabelNumber) }}</th>
-                    <td>
-                        <input
-                            type="time"
-                            name="break_times[{{ $newIndex }}][start_time]"
-                            value="{{ old('break_times.' . $newIndex . '.start_time') }}">
-                        <span>～</span>
-                        <input
-                            type="time"
-                            name="break_times[{{ $newIndex }}][end_time]"
-                            value="{{ old('break_times.' . $newIndex . '.end_time') }}">
-
-                        <p class="form__error">
-                            @if($errors->has("break_times.{$newIndex}.start_time"))
-                                {{ $errors->first("break_times.{$newIndex}.start_time") }}
-                            @endif
-                        </p>
-                        <p class="form__error">
-                            @if($errors->has("break_times.{$newIndex}.end_time"))
-                                {{ $errors->first("break_times.{$newIndex}.end_time") }}
-                            @endif
-                        </p>
+                            <p class="form__error">
+                                @error('start_time')
+                                    {{ $message }}
+                                @enderror
+                            </p>
+                            <p class="form__error">
+                                @error('end_time')
+                                    {{ $message }}
+                                @enderror
+                            </p>
+                        @endif
                     </td>
                 </tr>
 
-                <tr class="attendance-detail__row">
-                    <th class="attendance-detail__inner-title">備考</th>
-                    <td>
-                        <input class="attendance-detail__note" type="text" name="note" id="note" value="{{ old('note') }}">
-                        <p class="form__error">
-                            @error('note')
-                                {{ $message }}
-                            @enderror
-                        </p>
-                    </td>
+                @if($hasUnapprovedRequest)
+                    @foreach($unapprovedBreakTimeRequest->breakTimes as $index => $breakTime)
+                    <tr class="table-row">
+                        <th class="table-header">{{ $index == 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
+                        <td class="table-content--break-time">
+                            <div class="table-data__inner">
+                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTime->start_time)->format('H:i') }}</p>
+                                <span class="wave-dash">～</span>
+                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTime->end_time)->format('H:i') }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                @else
+                    @foreach($attendance->breakTimes as $index => $breakTime)
+                    <tr class="table-row">
+                        <th class="table-header">{{ $index == 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
+                        <td class="table-content--break-time">
+                            <div class="table-data__inner">
+                                <input
+                                    class="table-data__input--time"
+                                    type="time"
+                                    name="break_start_time[{{ $index }}]"
+                                    value="{{ old('break_start_time.' . $index, \Carbon\Carbon::parse($breakTime->start_time)->format('H:i')) }}">
+                                <span class="wave-dash">～</span>
+                                <input
+                                    class="table-data__input--time"
+                                    type="time"
+                                    name="break_end_time[{{ $index }}]"
+                                    value="{{ old('break_times.' . $index, \Carbon\Carbon::parse($breakTime->end_time)->format('H:i')) }}">
+                            </div>
+
+                            <p class="form__error">
+                                @if($errors->has("break_start_time.{$index}"))
+                                    {{ $errors->first("break_start_time.{$index}") }}
+                                @endif
+                            </p>
+                            <p class="form__error">
+                                @if($errors->has("break_end_time.{$index}"))
+                                    {{ $errors->first("break_end_time.{$index}") }}
+                                @endif
+                            </p>
+                        </td>
+                    </tr>
+                    @endforeach
+                @endif
+
+                @if(!$hasUnapprovedRequest)
+                    <!-- 新規入力欄（空白）-->
+                    @php
+                        $newIndex = count($attendance->breakTimes);
+                        $newLabelNumber = $newIndex + 1;
+                    @endphp
+                    <tr class="table-row">
+                        <th class="table-header">{{ $newIndex == 0 ? '休憩' : '休憩' . ($newLabelNumber) }}</th>
+                        <td class="table-content--break-time">
+                            <div class="table-data__inner">
+                                <input
+                                    class="table-data__input--time"
+                                    type="time"
+                                    name="break_start_time[{{ $newIndex }}]"
+                                    value="{{ old('break_start_time.' . $newIndex) }}">
+                                <span class="wave-dash">～</span>
+                                <input
+                                    class="table-data__input--time"
+                                    type="time"
+                                    name="break_end_time[{{ $newIndex }}]"
+                                    value="{{ old('break_end_time.' . $newIndex) }}">
+                            </div>
+
+                            <p class="form__error">
+                                @if($errors->has("break_start_time.{$newIndex}"))
+                                    {{ $errors->first("break_start_time.{$newIndex}") }}
+                                @endif
+                            </p>
+                            <p class="form__error">
+                                @if($errors->has("break_end_time.{$newIndex}"))
+                                    {{ $errors->first("break_end_time.{$newIndex}") }}
+                                @endif
+                            </p>
+                        </td>
+                    </tr>
+                @endif
+
+                <tr class="table-row">
+                    <th class="table-header">備考</th>
+                    <td class="table-content--note">
+                        @if($hasUnapprovedRequest)
+                            <p class="table-data__text--note">{{ $unapprovedRequest->note ? $unapprovedRequest->note : '' }}</p>
+                        @else
+                            <textarea class="table-data__textarea" name="note" id="note">{{ old('note') }}</textarea>
+                            <p class="form__error">
+                                @error('note')
+                                    {{ $message }}
+                                @enderror
+                            </p>
+                        @endif
                     </td>
                 </tr>
             </table>

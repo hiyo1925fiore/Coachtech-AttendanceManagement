@@ -15,15 +15,9 @@ class BreakTimeRequest extends Model
 
     protected $fillable = [
         'attendance_request_id',
-        'break_time_id',
         'start_time',
         'end_time',
     ];
-
-    public function breakTime()
-    {
-        return $this->belongsTo(BreakTime::class);
-    }
 
     public function attendanceRequest()
     {

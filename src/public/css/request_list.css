@@ -1,0 +1,122 @@
+.content {
+    height: calc(100vh - 80px);
+    font-family: "Inter";
+    font-optical-sizing: auto;
+    font-style: normal;
+    padding: 78px 0 170px;
+    background-color: #f0eff2;
+}
+
+.heading-title {
+    width: 900px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.heading-title__text {
+    margin: 0;
+    line-height: 40px;
+    border-left: 8px solid #000000;
+    padding: 0px 21px;
+    font-weight: 700;
+    font-size: 30px;
+    color: #000;
+}
+
+.list__tab-buttons {
+    width: 900px;
+    height: 56px;
+    margin: 61px auto 45px;
+    padding: 0 4px;
+    display: flex;
+    border-bottom: 1px solid #000;
+}
+
+.tab-button--active,
+.tab-button {
+    margin: 20px 53px;
+    padding: 0;
+    font-size: 16px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.tab-button--active {
+    font-weight: 700;
+}
+
+.tab-button {
+    font-weight: 400;
+}
+
+.list__container {
+}
+
+.list__table {
+    margin: 0 auto;
+    width: 900px;
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    color: #737373;
+    border-radius: 10px;
+}
+
+.list__table--header-row {
+    height: 46px;
+    border-bottom: 3px solid #e1e1e1;
+}
+
+.table-header,
+.table-header--status {
+    text-align: left;
+}
+
+.table-header--status {
+    padding-left: 55px;
+}
+
+.list__table--row {
+    height: 47px;
+}
+
+.list__table--row:not(:last-child) {
+    border-bottom: 2px solid #e1e1e1;
+}
+
+.table-content--status {
+    width: 180px;
+    padding-left: 37px;
+}
+
+.table-content--name {
+    width: 125px;
+}
+
+.table-content--date {
+    width: 163px;
+}
+
+.table-content--note,
+.table-content--created-at {
+    width: 155px;
+}
+
+.table-content--detail {
+    width: 122px;
+}
+
+.detail-link {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.list__table-row--no-item {
+    background-color: #f0eff2;
+}
+
+.table-content--no-item {
+    padding-left: 37px;
+}

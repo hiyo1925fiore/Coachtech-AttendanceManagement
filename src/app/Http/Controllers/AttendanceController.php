@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\AttendanceRequest as AttendanceRequestModel;
-use App\Http\Requests\AttendanceRequest;
 use App\Models\BreakTimeRequest;
+use App\Http\Requests\AttendanceRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,28 +91,88 @@ class AttendanceController extends Controller
     /**
      * 勤怠詳細画面表示
      */
-    public function showDetail($attendance_id){
-        $attendance = Attendance::with('breakTimes')->find($attendance_id);
+    public function showDetail($date){
+        // 日付の妥当性チェック
+        try {
+            $targetDate = Carbon::createFromFormat('Y-m-d', $date);
+        } catch (\Exception $e) {
+            abort(404, '無効な日付です');
+        }
+
+        $user_id = Auth::id();
+
+        // 指定日の勤怠データを取得
+        $attendance = Attendance::where('user_id', $user_id)
+            ->whereDate('date', $targetDate)
+            ->first();
+
+        if (!$attendance) {
+        // 勤怠データが存在しない場合は空のインスタンスを作成
+        $attendance = new Attendance([
+            'user_id' => $user_id,
+            'date' => $date
+        ]);
+    }
 
         // 未承認の修正申請があるかチェック
-        $hasUnapprovedRequest = AttendanceRequestModel::where('attendance_id', $attendance_id)
+        $hasUnapprovedRequest = AttendanceRequestModel::where('attendance_id', $attendance->id)
             ->where('is_approved', 0)
             ->exists();
 
-        return view('attendance_detail', compact('attendance', 'hasUnapprovedRequest'));
+        //未承認の申請内容を取得
+        $unapprovedAttendanceRequest = AttendanceRequestModel::where('attendance_id', $attendance->id)
+            ->where('is_approved', 0)
+            ->first();
+
+        // 未承認の休憩時間修正申請を取得
+    $unapprovedBreakTimeRequests = [];
+    if ($unapprovedAttendanceRequest) {
+        $unapprovedBreakTimeRequests = BreakTimeRequest::where('attendance_request_id',
+            $unapprovedAttendanceRequest->id)
+            ->get();
+    }
+
+        return view('attendance_detail', compact('attendance', 'hasUnapprovedRequest', 'unapprovedAttendanceRequest' , '$unapprovedBreakTimeRequests', 'date'));
+    }
+
+    /**
+     * 申請一覧画面（一般ユーザー）表示
+     */
+    public function showRequestList(){
+        return view('request_list');
     }
 
     /**
      * 勤怠修正申請送信処理
      */
-    public function postRequest(AttendanceRequest $request, $attendance_id)
+    public function postRequest(AttendanceRequest $request, $date)
     {
-        $attendance = Attendance::find($attendance_id);
+        // 日付の妥当性チェック
+        try {
+            $targetDate = Carbon::createFromFormat('Y-m-d', $date);
+        } catch (\Exception $e) {
+            abort(404, '無効な日付です');
+        }
+
+        $user_id = Auth::id();
+
+        // 勤怠データを取得（存在しない場合は新規作成）
+        $attendance = Attendance::firstOrCreate(
+            [
+                'user_id' => $user_id,
+                'date' => $date
+            ],
+            [
+                'start_time' => null,
+                'end_time' => null,
+                'note' => null
+            ]
+        );
 
         // 勤怠修正申請を保存
         $attendanceRequest = AttendanceRequestModel::create([
-            'attendance_id' => $attendance_id,
-            'user_id' => $attendance->user_id,
+            'attendance_id' => $attendance->id,
+            'user_id' => $user_id,
             'start_time' => $request->start_time . ':00',
             'end_time' => $request->end_time . ':00',
             'note' => $request->note,
@@ -122,7 +182,7 @@ class AttendanceController extends Controller
         // 休憩時間の申請を保存
         $this->saveBreakTimeRequests($attendanceRequest, $request);
 
-        return redirect()->route('attendance.detail', $attendance_id)
+        return redirect()->route('attendance.detail', $date)
             ->with('success', '修正リクエストを送信しました。管理者の承認をお待ちください。');
     }
 
@@ -131,17 +191,18 @@ class AttendanceController extends Controller
      */
     private function saveBreakTimeRequests($attendanceRequest, $request)
     {
-        $breakStartTimes = $request->break_start_time ?? [];
-        $breakEndTimes = $request->break_end_time ?? [];
+        // リクエストから休憩時間の申請を取得
+        $breakStartTimes = $request->input('break_start_time', []);
+        $breakEndTimes = $request->input('break_end_time', []);
 
+        // 既存の休憩時間と新規追加分を両方処理
         foreach ($breakStartTimes as $index => $startTime) {
             $endTime = $breakEndTimes[$index] ?? null;
 
-            // 両方の時間が入力されている場合のみ保存
+            // 両方の時間が入力されており、空でない場合のみ保存
             if (!empty($startTime) && !empty($endTime)) {
                 BreakTimeRequest::create([
                     'attendance_request_id' => $attendanceRequest->id,
-                    'break_time_id' => '',
                     'start_time' => $startTime . ':00',
                     'end_time' => $endTime . ':00',
                 ]);
