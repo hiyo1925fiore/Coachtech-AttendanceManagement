@@ -41,6 +41,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'integer',
     ];
 
     public function attendances()
@@ -51,5 +52,25 @@ class User extends Authenticatable
     public function attendanceRequests()
     {
         return $this->hasMany(AttendanceRequest::class);
+    }
+
+    /**
+     * ユーザーが管理者かどうかを判定
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->is_admin === 1;
+    }
+
+    /**
+     * ユーザーが一般ユーザーかどうかを判定
+     *
+     * @return bool
+     */
+    public function isUser(): bool
+    {
+        return $this->is_admin === 0;
     }
 }

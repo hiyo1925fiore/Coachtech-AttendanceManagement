@@ -1,4 +1,5 @@
 .content {
+    height: calc(100vh - 80px);
     font-family: "Inter";
     font-optical-sizing: auto;
     font-style: normal;
@@ -22,7 +23,7 @@
     color: #000;
 }
 
-.pagination-by-month {
+.pagination-by-day {
     width: 900px;
     height: 60px;
     margin: 43px auto 46px;
@@ -96,15 +97,15 @@
     border-bottom: 3px solid #e1e1e1;
 }
 
-.table-header--date,
+.table-header--name,
 .table-header--items,
 .table-header--detail,
-.table-content--date,
+.table-content--name,
 .table-content--items {
     text-align: left;
 }
 
-.table-header--date {
+.table-header--name {
     padding-left: 57px;
     width: 200px;
 }
@@ -124,7 +125,7 @@
     border-bottom: 2px solid #e1e1e1;
 }
 
-.table-content--date {
+.table-content--name {
     padding-left: 55px;
     width: 200px;
 }

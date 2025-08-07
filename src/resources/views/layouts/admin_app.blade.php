@@ -32,7 +32,7 @@
                     </li>
 
                     <li class="header__list-item">
-                        <form action="/logout" class="header__form" method="post">
+                        <form action="/admin/logout" class="header__form" method="post">
                             @csrf
                             <button class="header__form--logout" type="submit">ログアウト</button>
                         </form>

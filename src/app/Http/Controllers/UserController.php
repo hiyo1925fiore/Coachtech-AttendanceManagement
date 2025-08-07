@@ -46,4 +46,29 @@ class UserController extends Controller
             'email' => 'ログイン情報が登録されていません',
         ]);
     }
+
+    /**
+     * 管理者ログイン画面表示
+     */
+    public function showAdminLogin(){
+        return view('auth.admin_login');
+    }
+
+    public function loginAdminUser(LoginRequest $request){
+        $credentials = $request->only('email', 'password');
+        $credentials['is_admin'] = 1;
+        if(Auth::attempt($credentials)){
+            // メール認証が済んでいない場合
+            //if (!Auth::user()->hasVerifiedEmail()) {
+                //return redirect()->route('verification.notice');
+            //}
+
+            return redirect('/admin/attendances');
+        }
+
+        // カスタムエラーメッセージ
+        throw ValidationException::withMessages([
+            'email' => 'ログイン情報が登録されていません',
+        ]);
+    }
 }

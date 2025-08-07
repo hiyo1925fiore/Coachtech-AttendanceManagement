@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\AttendanceRequest as AttendanceRequestModel;
@@ -14,9 +15,25 @@ use Illuminate\Support\Facades\Auth;
 class AttendanceController extends Controller
 {
     /**
+     * 管理者が一般ユーザーページにアクセスした場合のチェック
+     */
+    private function checkUserAccess(): ?RedirectResponse
+    {
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.attendance.list');
+        }
+        return null;
+    }
+
+    /**
      * 出勤登録画面表示
      */
     public function index(){
+        // 管理者アクセスチェック
+        if ($redirect = $this->checkUserAccess()) {
+            return $redirect;
+        }
+
         return view('attendance_register');
     }
 
@@ -24,6 +41,11 @@ class AttendanceController extends Controller
      * 勤怠一覧画面（一般ユーザー）表示
      */
     public function showAttendanceList(Request $request){
+        // 管理者アクセスチェック
+        if ($redirect = $this->checkUserAccess()) {
+            return $redirect;
+        }
+
         // 年月の取得（デフォルトは現在の年月）
         $year = $request->get('year', Carbon::now()->year);
         $month = $request->get('month', Carbon::now()->month);
@@ -75,13 +97,13 @@ class AttendanceController extends Controller
         }
 
         // 前月・翌月のリンク用データ
-        $prevMonth = $currentDate->copy()->subMonth();
+        $previousMonth = $currentDate->copy()->subMonth();
         $nextMonth = $currentDate->copy()->addMonth();
 
         return view('attendance_list', compact(
             'attendanceData',
             'currentDate',
-            'prevMonth',
+            'previousMonth',
             'nextMonth',
             'year',
             'month'
@@ -89,9 +111,14 @@ class AttendanceController extends Controller
     }
 
     /**
-     * 勤怠詳細画面表示
+     * 勤怠詳細画面（一般ユーザー）表示
      */
     public function showDetail($date){
+        // 管理者アクセスチェック
+        if ($redirect = $this->checkUserAccess()) {
+            return $redirect;
+        }
+
         // 日付の妥当性チェック
         try {
             $targetDate = Carbon::createFromFormat('Y-m-d', $date);
@@ -139,6 +166,11 @@ class AttendanceController extends Controller
      * 申請一覧画面（一般ユーザー）表示
      */
     public function showRequestList(){
+        // 管理者アクセスチェック
+        if ($redirect = $this->checkUserAccess()) {
+            return $redirect;
+        }
+
         return view('request_list');
     }
 
@@ -209,6 +241,57 @@ class AttendanceController extends Controller
             }
         }
     }
+
+    /**
+     * 勤怠一覧画面（管理者）表示
+     */
+    public function showAdminAttendance(Request $request){
+        // 年月日の取得（デフォルトは現在の年月日）
+        $year = $request->get('year', Carbon::now()->year);
+        $month = $request->get('month', Carbon::now()->month);
+        $day = $request->get('day', Carbon::now()->day);
+
+        // 指定された年月日を作成
+        $currentDate = Carbon::create($year, $month, $day);
+
+        // 指定された年月日の勤怠データを取得
+    $attendances = Attendance::whereYear('date', $year)
+        ->whereMonth('date', $month)
+        ->whereDay('date', $day)
+        ->whereNotNull('start_time')
+        ->with('breakTimes', 'user')
+        ->orderBy('user_id', 'asc')
+        ->get();
+
+        // 各日付に対応する勤怠データを作成
+        $attendanceData = [];
+
+        foreach ($attendances as $attendance) {
+            $breakTime = $this->calculateBreakTime($attendance->breakTimes);
+
+            $attendanceData[] = [
+                'date' => $currentDate->format('Y-m-d'),
+                'attendance' => $attendance,
+                'break_time' => $breakTime,
+                'work_time' => $this->calculateWorkTime($attendance, $breakTime),
+            ];
+        }
+
+        // 前日・翌日のリンク用データ
+        $previousDay = $currentDate->copy()->subDay();
+        $nextDay = $currentDate->copy()->addDay();
+
+        return view('admin.admin_attendance_list', compact(
+            'attendanceData',
+            'currentDate',
+            'previousDay',
+            'nextDay',
+            'year',
+            'month',
+            'day'
+        ));
+    }
+
 
     /**
      * 休憩時間を計算

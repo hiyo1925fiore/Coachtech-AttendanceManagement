@@ -1,40 +1,42 @@
-@extends('layouts.app')
+@extends('layouts.admin_app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin_attendance_list.css') }}">
 @endsection
 
 @section('content')
 <div class="content">
     <div class="heading-title">
-        <h1 class="heading-title__text">勤怠一覧</h1>
+        <h1 class="heading-title__text">{{ $currentDate->format('Y年n月j日') }}の勤怠</h1>
     </div>
 
-    <div class="pagination-by-month">
-        <!-- 前月ボタン -->
-        <form class="pagination-form" action="{{ route('attendance.list.post') }}" method="post">
+    <div class="pagination-by-day">
+        <!-- 前日ボタン -->
+        <form class="pagination-form" action="{{ route('admin.attendance.list.post') }}" method="post">
             @csrf
-            <input type="hidden" name="year" value="{{ $previousMonth->year }}">
-            <input type="hidden" name="month" value="{{ $previousMonth->month }}">
+            <input type="hidden" name="year" value="{{ $previousDay->year }}">
+            <input type="hidden" name="month" value="{{ $previousDay->month }}">
+            <input type="hidden" name="day" value="{{ $previousDay->day }}">
             <button class="pagination-button" type="submit">
                 <img class="arrow-icon--left" src="{{asset('image/arrow.png')}}" alt="←">
-                前月
+                前日
             </button>
         </form>
 
-        <!-- 現在の月表示 -->
+        <!-- 現在の年月日表示 -->
         <div class="current-date">
             <img class="calendar-icon" src="{{asset('image/calendar.png')}}" alt="カレンダー">
-            <h2 class="current-date__text">{{ $currentDate->format('Y/m') }}</h2>
+            <h2 class="current-date__text">{{ $currentDate->format('Y/m/d') }}</h2>
         </div>
 
-        <!-- 翌月ボタン -->
-        <form class="pagination-form" action="{{ route('attendance.list.post') }}" method="post">
+        <!-- 翌日ボタン -->
+        <form class="pagination-form" action="{{ route('admin.attendance.list.post') }}" method="post">
             @csrf
-            <input type="hidden" name="year" value="{{ $nextMonth->year }}">
-            <input type="hidden" name="month" value="{{ $nextMonth->month }}">
+            <input type="hidden" name="year" value="{{ $nextDay->year }}">
+            <input type="hidden" name="month" value="{{ $nextDay->month }}">
+            <input type="hidden" name="day" value="{{ $nextDay->day }}">
             <button class="pagination-button" type="submit">
-                翌月
+                翌日
                 <img class="arrow-icon--right" src="{{asset('image/arrow.png')}}" alt=">">
             </button>
         </form>
@@ -42,7 +44,7 @@
 
     <table class="attendance__table">
         <tr class="attendance__table-header--row">
-            <th class="table-header--date">日付</th>
+            <th class="table-header--name">名前</th>
             <th class="table-header--items">出勤</th>
             <th class="table-header--items">退勤</th>
             <th class="table-header--items">休憩</th>
@@ -52,10 +54,9 @@
 
         @foreach($attendanceData as $data)
         <tr class="attendance__table--row">
-            <!-- 日付 -->
-            <td class="table-content--date">
-                {{ $data['date']->format('m/d') }}
-                {{ ['(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)'][$data['date']->dayOfWeek] }}
+            <!-- スタッフ名 -->
+            <td class="table-content--name">
+                {{ $data['attendance']->user->name }}
             </td>
 
             <!-- 出勤時間 -->
@@ -89,11 +90,11 @@
             <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
             <td class="table-content--detail">
                 @if($data['attendance'])
-                    <a href="{{ route('attendance.detail', ['date' => $data['date']]) }}" class="detail-link">
+                    <a href="" class="detail-link">
                         詳細
                     </a>
                 @else
-                    <a href="{{ route('attendance.detail', ['date' => $data['date']->format('Y-m-d')]) }}" class="detail-link">
+                    <a href="" class="detail-link">
                         詳細
                     </a>
                 @endif
