@@ -147,19 +147,12 @@ class AttendanceController extends Controller
             ->exists();
 
         //未承認の申請内容を取得
-        $unapprovedAttendanceRequest = AttendanceRequestModel::where('attendance_id', $attendance->id)
+        $unapprovedRequest = AttendanceRequestModel::where('attendance_id', $attendance->id)
             ->where('is_approved', 0)
+            ->with('breakTimeRequests')
             ->first();
 
-        // 未承認の休憩時間修正申請を取得
-    $unapprovedBreakTimeRequests = [];
-    if ($unapprovedAttendanceRequest) {
-        $unapprovedBreakTimeRequests = BreakTimeRequest::where('attendance_request_id',
-            $unapprovedAttendanceRequest->id)
-            ->get();
-    }
-
-        return view('attendance_detail', compact('attendance', 'hasUnapprovedRequest', 'unapprovedAttendanceRequest' , '$unapprovedBreakTimeRequests', 'date'));
+        return view('attendance_detail', compact('attendance', 'hasUnapprovedRequest', 'unapprovedRequest' , 'date'));
     }
 
     /**
@@ -292,6 +285,91 @@ class AttendanceController extends Controller
         ));
     }
 
+    /**
+     * 勤怠詳細画面（管理者）表示
+     */
+    public function showAdminDetail(Request $request){
+        // リクエストから勤怠のIDを取得
+        $id = $request->id;
+
+        // IDと一致する勤怠データを取得
+        $attendance = Attendance::where('id', $id)
+            ->with('user', 'breakTimes')
+            ->first();
+
+        return view('admin.admin_attendance_detail', compact('attendance', 'id'));
+    }
+
+    /**
+     * 勤怠修正処理
+     */
+    public function updateDetail(AttendanceRequest $request, $id)
+    {
+        $attendance = Attendance::with('breakTimes')
+            ->findOrFail($id);
+
+        try {
+            // データベースの更新をトランザクションで実行
+            \DB::beginTransaction();
+
+            // Attendancesテーブルを更新
+            $attendance->update([
+                'start_time' => $request->start_time . ':00',
+                'end_time' => $request->end_time . ':00',
+                'note' => $request->note,
+            ]);
+
+            // 既存の休憩時間を更新・削除
+            if (isset($request->break_time_ids)) {
+                foreach ($request->break_time_ids as $index => $breakTimeId) {
+                    $breakTime = BreakTime::find($breakTimeId);
+
+                    if ($breakTime) {
+                        $breakStartTime = $request['break_start_time'][$index] ?? null;
+                        $breakEndTime = $request['break_end_time'][$index] ?? null;
+
+                        if ($breakStartTime && $breakEndTime) {
+                            // 更新処理
+                            $breakTime->update([
+                                'start_time' => $breakStartTime,
+                                'end_time' => $breakEndTime,
+                            ]);
+                        } else {
+                            // 空の場合は削除
+                            $breakTime->delete();
+                        }
+                    }
+                }
+            }
+
+            // 新しい休憩時間を追加
+            if (isset($request['break_start_time']) && isset($request['break_end_time'])) {
+                $existingBreakCount = count($request->break_time_ids ?? []);
+
+                for ($i = $existingBreakCount; $i < count($request['break_start_time']); $i++) {
+                    $breakStartTime = $request['break_start_time'][$i] ?? null;
+                    $breakEndTime = $request['break_end_time'][$i] ?? null;
+
+                    if ($breakStartTime && $breakEndTime) {
+                        BreakTime::create([
+                            'attendance_id' => $attendance->id,
+                            'start_time' => $breakStartTime,
+                            'end_time' => $breakEndTime,
+                        ]);
+                    }
+                }
+            }
+
+        \DB::commit();
+
+        return redirect()->route('admin.attendance.detail.update', $id)
+            ->with('success', '勤怠を修正しました。');
+
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors(['error' => '更新中にエラーが発生しました。'])->withInput();
+        }
+    }
 
     /**
      * 休憩時間を計算

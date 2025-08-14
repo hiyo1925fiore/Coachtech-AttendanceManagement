@@ -1,5 +1,18 @@
+.alert--success {
+    padding: 10px 30px;
+    border-color: #badbcc;
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.alert--error {
+    padding: 10px 0;
+    border-color: #f5c2c7;
+    background-color: #f8d7da;
+    color: #842029;
+}
+
 .content {
-    height: calc(100vh - 80px);
     font-family: "Inter";
     font-optical-sizing: auto;
     font-style: normal;
@@ -34,9 +47,6 @@
     border-radius: 10px;
 }
 
-.table-row {
-}
-
 .table-row:not(:last-child) {
     border-bottom: 2px solid #e1e1e1;
 }
@@ -57,6 +67,7 @@
 
 .table-content--name {
     height: 79px;
+    padding: 1px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -73,6 +84,7 @@
 
 .table-content--date {
     height: 89px;
+    padding: 1px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -103,10 +115,21 @@
     cursor: pointer;
 }
 
+.table-data__input--time:placeholder-shown {
+    color: transparent;
+}
+
 .table-data__input--time::-webkit-calendar-picker-indicator {
     position: absolute;
     opacity: 0;
     cursor: pointer;
+}
+
+.form__error {
+    margin: 8px 0 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #ff5555;
 }
 
 .table-content--break-time {
@@ -114,8 +137,19 @@
 }
 
 .table-content--note {
-    height: 106px;
-    padding-top: 9px;
+    min-height: 106px;
+    padding: 14px 0 0;
+}
+
+.table-data__text--note {
+    width: 316px;
+    min-height: 97px;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0 0 9px;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .table-data__textarea {

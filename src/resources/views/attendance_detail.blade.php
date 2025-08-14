@@ -13,7 +13,6 @@
     <div class="attendance-detail">
         <form class="correction-request-form" action="/attendance/detail/{{$date}}" method="post">
             @csrf
-            @method('PUT')
             <table class="attendance-detail__table">
                 <tr class="table-row">
                     <th class="table-header">名前</th>
@@ -71,14 +70,14 @@
                 </tr>
 
                 @if($hasUnapprovedRequest)
-                    @foreach($unapprovedBreakTimeRequest->breakTimes as $index => $breakTime)
+                    @foreach($unapprovedRequest->breakTimeRequests as $index => $breakTimeRequest)
                     <tr class="table-row">
                         <th class="table-header">{{ $index == 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
                         <td class="table-content--break-time">
                             <div class="table-data__inner">
-                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTime->start_time)->format('H:i') }}</p>
+                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTimeRequest->start_time)->format('H:i') }}</p>
                                 <span class="wave-dash">～</span>
-                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTime->end_time)->format('H:i') }}</p>
+                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTimeRequest->end_time)->format('H:i') }}</p>
                             </div>
                         </td>
                     </tr>

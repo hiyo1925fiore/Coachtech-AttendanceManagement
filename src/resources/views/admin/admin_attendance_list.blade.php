@@ -89,15 +89,9 @@
 
             <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
             <td class="table-content--detail">
-                @if($data['attendance'])
-                    <a href="" class="detail-link">
-                        詳細
-                    </a>
-                @else
-                    <a href="" class="detail-link">
-                        詳細
-                    </a>
-                @endif
+                <a href="{{ route('admin.attendance.detail', ['id' => $data['attendance']->id]) }}" class="detail-link">
+                    詳細
+                </a>
             </td>
         </tr>
         @endforeach

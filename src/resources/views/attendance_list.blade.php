@@ -89,7 +89,7 @@
             <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
             <td class="table-content--detail">
                 @if($data['attendance'])
-                    <a href="{{ route('attendance.detail', ['date' => $data['date']]) }}" class="detail-link">
+                    <a href="{{ route('attendance.detail', ['date' => $data['date']->format('Y-m-d')]) }}" class="detail-link">
                         詳細
                     </a>
                 @else

@@ -20,7 +20,7 @@
             <nav class="header__nav">
                 <ul class="header__list">
                 <li class="header__list-item">
-                        <a class="header__link" href="admin/attendances">勤怠一覧</a>
+                        <a class="header__link" href="/admin/attendances">勤怠一覧</a>
                     </li>
 
                     <li class="header__list-item">

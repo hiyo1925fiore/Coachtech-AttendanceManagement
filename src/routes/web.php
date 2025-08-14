@@ -36,15 +36,15 @@ Route::middleware('auth')->group(function () {
     // 勤怠一覧画面(GET) - 初回表示用
     Route::get('/attendance/list', [AttendanceController::class, 'showAttendanceList'])
         ->name('attendance.list');
-    // 勤怠一覧画面(GET) - 日付変更用
+    // 勤怠一覧画面(POST) - 日付変更用
     Route::post('/attendance/list', [AttendanceController::class, 'showAttendanceList'])
         ->name('attendance.list.post');
     // 勤怠詳細画面(GET) - 初回表示用
     Route::get('/attendance/detail/{date}',[AttendanceController::class,'showDetail'])
         ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
         ->name('attendance.detail');
-    // 勤怠詳細画面(PUT) - 修正申請送信用
-    Route::put('/attendance/detail/{date}', [AttendanceController::class, 'postRequest'])
+    // 勤怠詳細画面(POST) - 修正申請送信用
+    Route::post('/attendance/detail/{date}', [AttendanceController::class, 'postRequest'])
         ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
         ->name('attendance.correct');
     // 申請一覧画面
@@ -61,4 +61,13 @@ Route::middleware('adminOnly')->group(function () {
     // 勤怠一覧画面（POST）- 日付変更用
     Route::post('/admin/attendances', [AttendanceController::class, 'showAdminAttendance'])
         ->name('admin.attendance.list.post');
+    // 勤怠詳細画面(GET) - 初回表示用
+    Route::get('/admin/attendances/{id}',[AttendanceController::class,'showAdminDetail'])
+        ->name('admin.attendance.detail');
+    // 勤怠詳細画面(PUT) - 勤怠修正用
+    Route::put('/admin/attendances/{id}',[AttendanceController::class,'updateDetail'])
+        ->name('admin.attendance.detail.update');
+    // スタッフ一覧画面
+    Route::get('/admin/users', [UserController::class, 'showStaffList'])
+        ->name('admin.staff.list');
 });

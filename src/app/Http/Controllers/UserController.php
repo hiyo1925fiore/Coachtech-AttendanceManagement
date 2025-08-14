@@ -12,6 +12,9 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+    /**
+     * 一般ユーザー新規登録処理
+     */
     public function storeUser(RegisterRequest $request){
         $user=User::create([
             'name'=>$request->name,
@@ -29,6 +32,9 @@ class UserController extends Controller
         return redirect()->route('attendance.register');
     }
 
+    /**
+     * 一般ユーザーログイン処理
+     */
     public function loginUser(LoginRequest $request){
         $credentials = $request->only('email', 'password');
         $credentials['is_admin'] = 0;
@@ -54,6 +60,9 @@ class UserController extends Controller
         return view('auth.admin_login');
     }
 
+    /**
+     * 管理者ログイン処理
+     */
     public function loginAdminUser(LoginRequest $request){
         $credentials = $request->only('email', 'password');
         $credentials['is_admin'] = 1;
@@ -70,5 +79,13 @@ class UserController extends Controller
         throw ValidationException::withMessages([
             'email' => 'ログイン情報が登録されていません',
         ]);
+    }
+
+    /**
+     * スタッフ一覧画面表示
+     */
+    public function showStaffList(){
+
+        return view('admin.staff_list');
     }
 }
