@@ -28,3 +28,16 @@ MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 |created_at|timestamp| | | | |
 |updated_at|timestamp| | | | |
 |is_admin|tinyint(1)| | |○| |
+
+### attendancesテーブル
+
+|**カラム名**|**型**|**primary key**|**unique key**|**not null**|**foreign key**|
+|---|---|---|---|---|---|
+|id|bigint|○| |○| |
+|user_id|bigint| | |○|users(id)|
+|date|date| | |○|　|
+|start_time|time| | | | |
+|end_time|time| | | | |
+|note|varchar(255)| | | | |
+|created_at|timestamp| | | | |
+|updated_at|timestamp| | | | |
