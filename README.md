@@ -20,3 +20,11 @@ MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 |**カラム名**|**型**|**primary key**|**unique key**|**not null**|**foreign key**|
 |---|---|---|---|---|---|
 |id|bigint|○| |○| |
+|name|varchar(255)| | |○| |
+|email|varchar(255)| |○|○|　|
+|email_verified_at|timestamp| | | | |
+|password|varchar(255)| | |○| |
+|remember_token|varchar(100)| | | | |
+|created_at|timestamp| | | | |
+|updated_at|timestamp| | | | |
+|is_admin|tinyint(1)| | |○| |
