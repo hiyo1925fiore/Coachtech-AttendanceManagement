@@ -41,3 +41,39 @@ MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 |note|varchar(255)| | | | |
 |created_at|timestamp| | | | |
 |updated_at|timestamp| | | | |
+
+### break_timesテーブル
+
+|**カラム名**|**型**|**primary key**|**unique key**|**not null**|**foreign key**|
+|---|---|---|---|---|---|
+|id|bigint|○| |○| |
+|attendance_id|bigint| | |○|attendances(id)|
+|start_time|time| | |○| |
+|end_time|time| | | | |
+|created_at|timestamp| | | | |
+|updated_at|timestamp| | | | |
+
+### attendance_requestsテーブル
+
+|**カラム名**|**型**|**primary key**|**unique key**|**not null**|**foreign key**|
+|---|---|---|---|---|---|
+|id|bigint|○| |○| |
+|user_id|bigint| | |○|users(id)|
+|attendance_id|bigint| | |○|attendances(id)|
+|start_time|time| | |○| |
+|end_time|time| | |○| |
+|note|varchar(255)| | |○| |
+|is_approved|tinyint(1)| | |○| |
+|created_at|timestamp| | | | |
+|updated_at|timestamp| | | | |
+
+### break_time_requestsテーブル
+
+|**カラム名**|**型**|**primary key**|**unique key**|**not null**|**foreign key**|
+|---|---|---|---|---|---|
+|id|bigint|○| |○| |
+|attendance_request_id|bigint| | |○|attendance_requests(id)|
+|start_time|time| | |○| |
+|end_time|time| | |○| |
+|created_at|timestamp| | | | |
+|updated_at|timestamp| | | | |
