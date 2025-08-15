@@ -15,3 +15,4 @@ https://mailtrap.io/
 .envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。  
 MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 ## テーブル仕様
+**usersテーブル**
