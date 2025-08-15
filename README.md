@@ -14,3 +14,4 @@ https://mailtrap.io/
 メールボックスのIntegrationsから 「laravel 7.x and 8.x」を選択し、  
 .envファイルのMAIL_MAILERからMAIL_ENCRYPTIONまでの項目をコピー＆ペーストしてください。  
 MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
+## テーブル仕様
