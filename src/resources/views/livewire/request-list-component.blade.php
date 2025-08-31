@@ -52,11 +52,19 @@
                         <td class="table-content--created-at">
                             <p class="table-content__text">{{ $data->created_at->format('Y/m/d ') }}</p>
                         </td>
-                        <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
+                        <!-- 勤怠詳細画面へのリンク -->
                         <td class="table-content--detail">
-                            <a href="{{ route('attendance.detail', ['date' => $data->attendance->date->format('Y-m-d')]) }}" class="detail-link">
-                                詳細
-                            </a>
+                            @if($userType === 'user')
+                                <!-- 一般ユーザー用 -->
+                                <a href="{{ route('attendance.detail', ['date' => $data->attendance->date->format('Y-m-d')]) }}" class="detail-link">
+                                    詳細
+                                </a>
+                            @else
+                                <!-- 管理者用 -->
+                                <a href="{{ route('admin.request.detail', ['id' => $data->id]) }}" class="detail-link">
+                                    詳細
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -103,11 +111,19 @@
                         <td class="table-content--created-at">
                             <p class="table-content__text">{{ $data->created_at->format('Y/n/j ') }}</p>
                         </td>
-                        <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
+                        <!-- 勤怠詳細画面へのリンク -->
                         <td class="table-content--detail">
-                            <a href="{{ route('attendance.detail', ['date' => $data->attendance->date->format('Y-m-d')]) }}" class="detail-link">
-                                詳細
-                            </a>
+                            @if($userType === 'user')
+                                <!-- 一般ユーザー用 -->
+                                <a href="{{ route('attendance.detail', ['date' => $data->attendance->date->format('Y-m-d')]) }}" class="detail-link">
+                                    詳細
+                                </a>
+                            @else
+                                <!-- 管理者用 -->
+                                <a href="{{ route('admin.request.detail', ['id' => $data->id]) }}" class="detail-link">
+                                    詳細
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

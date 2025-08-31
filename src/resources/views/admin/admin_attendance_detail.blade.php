@@ -17,17 +17,19 @@
     @endif
 </div>
 
-<div class="content">
+<div class="detail-content">
     <div class="heading-title">
         <h1 class="heading-title__text">勤怠詳細</h1>
     </div>
 
     <div class="attendance-detail">
-        <form class="update-form" action="{{ route('admin.attendance.detail.update', $id) }}"method="post">
+        <form class="update-form" action="{{ route('admin.attendance.detail.update', $date) }}"method="post">
             @method('PUT')
             @csrf
-            <!-- 変更を保存するためidをhidden属性で渡す -->
-            <input type="hidden" name="id" value="{{ $id }}">
+            <!-- 新規作成用にユーザーidをhidden属性で渡す -->
+            <input type="hidden" name="user_id" value="{{ $userId }}">
+            <!-- 変更を保存するため勤怠情報のidをhidden属性で渡す -->
+            <input type="hidden" name="id" value="{{ $attendance->id ? $attendance->id : '' }}">
             <table class="attendance-detail__table">
                 <tr class="table-row">
                     <th class="table-header">名前</th>

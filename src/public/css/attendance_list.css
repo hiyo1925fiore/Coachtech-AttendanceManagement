@@ -2,7 +2,7 @@
     font-family: "Inter";
     font-optical-sizing: auto;
     font-style: normal;
-    padding: 91px 0 114px;
+    padding: 91px 0 83px;
     background-color: #f0eff2;
 }
 
@@ -83,6 +83,7 @@
     background-color: #fff;
     font-size: 16px;
     font-weight: 700;
+    letter-spacing: 0.15em;
     color: #737373;
     border-radius: 10px;
 }
@@ -96,7 +97,6 @@
     border-bottom: 3px solid #e1e1e1;
 }
 
-.table-header--date,
 .table-header--items,
 .table-header--detail,
 .table-content--date,
@@ -105,7 +105,6 @@
 }
 
 .table-header--date {
-    padding-left: 57px;
     width: 200px;
 }
 
@@ -125,7 +124,7 @@
 }
 
 .table-content--date {
-    padding-left: 55px;
+    text-align: center;
     width: 200px;
 }
 
@@ -138,4 +137,26 @@
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+.csv-export {
+    height: 50px;
+    width: 900px;
+    margin: 60px auto 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.export__button {
+    width: 184px;
+    height: 100%;
+    line-height: 50px;
+    background-color: #000;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.15em;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
 }

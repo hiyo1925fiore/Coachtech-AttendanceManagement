@@ -55,19 +55,41 @@ Route::middleware('auth')->group(function () {
 Route::middleware('adminOnly')->group(function () {
     // ログアウト
     Route::post('/admin/logout', [AuthenticatedSessionController::class, 'adminDestroy']);
+    // 勤怠詳細画面(GET) - 初回表示用
+    Route::get('/admin/attendances/{date}',[AttendanceController::class,'showAdminDetail'])
+        ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        ->name('admin.attendance.detail');
+    // 一般ユーザーのIDをセッションに保存
+    Route::post('/admin/set-attendance-user', [AttendanceController::class, 'setAttendanceUser'])
+        ->name('admin.set.attendance.user');
+    // 勤怠詳細画面(PUT) - 勤怠修正用
+    Route::put('/admin/attendances/{date}',[AttendanceController::class,'updateDetail'])
+        ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        ->name('admin.attendance.detail.update');
+    // スタッフ別勤怠一覧画面(GET) - 初回表示用
+    Route::get('/admin/users/{user}/attendances', [AttendanceController::class, 'showStaffAttendance'])
+        ->name('admin.staff.attendance');
+    // スタッフ別勤怠一覧画面(GET) - CSV出力用
+    Route::get('/admin/users/{user}/attendances/csv', [AttendanceController::class, 'exportStaffAttendanceCsv'])
+        ->name('admin.staff.attendance.csv');
+    // スタッフ別勤怠一覧画面(POST) - 日付変更用
+    Route::post('/admin/users/{user}/attendances', [AttendanceController::class, 'showStaffAttendance'])
+        ->name('admin.staff.attendance.post');
+    // 修正申請承認画面(GET) - 初回表示用
+    Route::get('/admin/requests/{id}', [AttendanceController::class, 'showRequest'])
+        ->name('admin.request.detail');
+    // 修正申請承認画面(PUT) - 勤怠承認用
+    Route::put('/admin/requests/{id}', [AttendanceController::class, 'approveRequest'])
+        ->name('admin.request.update');
     // 勤怠一覧画面（GET）- 初回表示用
     Route::get('/admin/attendances', [AttendanceController::class, 'showAdminAttendance'])
         ->name('admin.attendance.list');
     // 勤怠一覧画面（POST）- 日付変更用
     Route::post('/admin/attendances', [AttendanceController::class, 'showAdminAttendance'])
         ->name('admin.attendance.list.post');
-    // 勤怠詳細画面(GET) - 初回表示用
-    Route::get('/admin/attendances/{id}',[AttendanceController::class,'showAdminDetail'])
-        ->name('admin.attendance.detail');
-    // 勤怠詳細画面(PUT) - 勤怠修正用
-    Route::put('/admin/attendances/{id}',[AttendanceController::class,'updateDetail'])
-        ->name('admin.attendance.detail.update');
     // スタッフ一覧画面
     Route::get('/admin/users', [UserController::class, 'showStaffList'])
         ->name('admin.staff.list');
+    // 申請一覧画面
+    Route::get('/admin/requests', [AttendanceController::class, 'showAdminRequestList'])->name('admin.requests.list');
 });

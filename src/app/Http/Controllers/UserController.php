@@ -82,10 +82,13 @@ class UserController extends Controller
     }
 
     /**
-     * スタッフ一覧画面表示
+     * スタッフ一覧画面（管理者）表示
      */
     public function showStaffList(){
+        // 一般ユーザーのデータを取得
+        $users = User::where('is_admin', 0)
+            ->get();
 
-        return view('admin.staff_list');
+        return view('admin.staff_list', compact('users'));
     }
 }

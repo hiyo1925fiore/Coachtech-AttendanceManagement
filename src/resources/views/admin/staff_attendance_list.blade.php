@@ -1,42 +1,40 @@
 @extends('layouts.admin_app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/admin_attendance_list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}">
 @endsection
 
 @section('content')
 <div class="content">
     <div class="heading-title">
-        <h1 class="heading-title__text">{{ $currentDate->format('Y年n月j日') }}の勤怠</h1>
+        <h1 class="heading-title__text">{{ $userName->name }}さんの勤怠</h1>
     </div>
 
-    <div class="pagination-by-day">
-        <!-- 前日ボタン -->
-        <form class="pagination-form" action="{{ route('admin.attendance.list.post') }}" method="post">
+    <div class="pagination-by-month">
+        <!-- 前月ボタン -->
+        <form class="pagination-form" action="{{ route('admin.staff.attendance.post', ['user' => $userId]) }}" method="post">
             @csrf
-            <input type="hidden" name="year" value="{{ $previousDay->year }}">
-            <input type="hidden" name="month" value="{{ $previousDay->month }}">
-            <input type="hidden" name="day" value="{{ $previousDay->day }}">
+            <input type="hidden" name="year" value="{{ $previousMonth->year }}">
+            <input type="hidden" name="month" value="{{ $previousMonth->month }}">
             <button class="pagination-button" type="submit">
                 <img class="arrow-icon--left" src="{{asset('image/arrow.png')}}" alt="←">
-                前日
+                前月
             </button>
         </form>
 
-        <!-- 現在の年月日表示 -->
+        <!-- 現在の月表示 -->
         <div class="current-date">
             <img class="calendar-icon" src="{{asset('image/calendar.png')}}" alt="カレンダー">
-            <h2 class="current-date__text">{{ $currentDate->format('Y/m/d') }}</h2>
+            <h2 class="current-date__text">{{ $currentDate->format('Y/m') }}</h2>
         </div>
 
-        <!-- 翌日ボタン -->
-        <form class="pagination-form" action="{{ route('admin.attendance.list.post') }}" method="post">
+        <!-- 翌月ボタン -->
+        <form class="pagination-form" action="{{ route('admin.staff.attendance.post', ['user' => $userId]) }}" method="post">
             @csrf
-            <input type="hidden" name="year" value="{{ $nextDay->year }}">
-            <input type="hidden" name="month" value="{{ $nextDay->month }}">
-            <input type="hidden" name="day" value="{{ $nextDay->day }}">
+            <input type="hidden" name="year" value="{{ $nextMonth->year }}">
+            <input type="hidden" name="month" value="{{ $nextMonth->month }}">
             <button class="pagination-button" type="submit">
-                翌日
+                翌月
                 <img class="arrow-icon--right" src="{{asset('image/arrow.png')}}" alt=">">
             </button>
         </form>
@@ -44,7 +42,7 @@
 
     <table class="attendance__table">
         <tr class="attendance__table-header--row">
-            <th class="table-header--name">名前</th>
+            <th class="table-header--date">日付</th>
             <th class="table-header--items">出勤</th>
             <th class="table-header--items">退勤</th>
             <th class="table-header--items">休憩</th>
@@ -54,9 +52,10 @@
 
         @foreach($attendanceData as $data)
         <tr class="attendance__table--row">
-            <!-- スタッフ名 -->
-            <td class="table-content--name">
-                {{ $data['attendance']->user->name }}
+            <!-- 日付 -->
+            <td class="table-content--date">
+                {{ $data['date']->format('m/d') }}
+                {{ ['(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)'][$data['date']->dayOfWeek] }}
             </td>
 
             <!-- 出勤時間 -->
@@ -87,20 +86,23 @@
                 @endif
             </td>
 
-            <!-- 勤怠詳細画面（管理者）へのリンク -->
+            <!-- 勤怠詳細画面（一般ユーザー）へのリンク -->
             <td class="table-content--detail">
-                <form method="POST" action="{{ route('admin.set.attendance.user') }}" style="display: inline;">
-                    @csrf
-                    <input type="hidden" name="user_id" value="{{ $data['attendance']->user_id }}">
-                    <input type="hidden" name="date" value="{{ $currentDate->format('Y-m-d') }}">
-                    <input type="hidden" name="redirect_url" value="{{ route('admin.attendance.detail', $currentDate->format('Y-m-d')) }}">
-                    <button type="submit" class="detail-button">
-                        詳細
-                    </button>
-                </form>
+                <a href="{{ route('admin.attendance.detail', $data['date']->format('Y-m-d')) }}" class="detail-link">
+                    詳細
+                </a>
             </td>
         </tr>
         @endforeach
     </table>
+
+    <!-- CSV出力ボタン -->
+    <div class="csv-export">
+        <a href="{{ route('admin.staff.attendance.csv', ['user' => $userId, 'year' => $year, 'month' => $month]) }}"
+            class="export__button">
+            <i class="fas fa-file-csv me-1"></i>
+            CSV出力
+        </a>
+    </div>
 </div>
 @endsection

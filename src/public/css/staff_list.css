@@ -23,31 +23,8 @@
     color: #000;
 }
 
-.list__tab-buttons {
-    width: 900px;
-    height: 56px;
-    margin: 61px auto 45px;
-    padding: 0 4px;
-    display: flex;
-    border-bottom: 1px solid #000;
-}
-
-.tab-button--active,
-.tab-button {
-    margin: 20px 53px;
-    padding: 0;
-    font-size: 16px;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-}
-
-.tab-button--active {
-    font-weight: 700;
-}
-
-.tab-button {
-    font-weight: 400;
+.list__container {
+    margin: 94px auto 94px;
 }
 
 .list__table {
@@ -56,6 +33,7 @@
     background-color: #fff;
     font-size: 16px;
     font-weight: 700;
+    letter-spacing: 0.15em;
     color: #737373;
     border-radius: 10px;
 }
@@ -65,13 +43,8 @@
     border-bottom: 3px solid #e1e1e1;
 }
 
-.table-header,
-.table-header--status {
-    text-align: left;
-}
-
-.table-header--status {
-    padding-left: 55px;
+.table-header--name {
+    padding-left: 171px;
 }
 
 .list__table--row {
@@ -82,26 +55,21 @@
     border-bottom: 2px solid #e1e1e1;
 }
 
-.table-content--status {
-    width: 180px;
-    padding-left: 37px;
+[class^="table-content--"] {
+    text-align: center;
 }
 
 .table-content--name {
-    width: 125px;
+    width: 302px;
+    padding-left: 171px;
 }
 
-.table-content--date {
-    width: 163px;
+.table-content--email {
+    width: 334px;
 }
 
-.table-content--note,
-.table-content--created-at {
-    width: 155px;
-}
-
-.table-content--detail {
-    width: 122px;
+.table-content--monthly-attendance {
+    width: 264px;
 }
 
 .detail-link {
@@ -112,8 +80,4 @@
 
 .list__table-row--no-item {
     background-color: #f0eff2;
-}
-
-.table-content--no-item {
-    padding-left: 37px;
 }

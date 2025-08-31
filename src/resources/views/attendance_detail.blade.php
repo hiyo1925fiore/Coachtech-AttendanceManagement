@@ -5,7 +5,19 @@
 @endsection
 
 @section('content')
-<div class="content">
+<div class="alert">
+    @if(session('success'))
+        <div class="alert--success">
+            {{ session('success') }}
+        </div>
+    @elseif(session('error'))
+        <div class="alert--error">
+            {{ session('error') }}
+        </div>
+    @endif
+</div>
+
+<div class="detail-content">
     <div class="heading-title">
         <h1 class="heading-title__text">勤怠詳細</h1>
     </div>
@@ -34,9 +46,9 @@
                     <td class="table-content--attendance">
                         @if($hasUnapprovedRequest)
                             <div class="table-data__inner">
-                                <p class="table-data__text--time">{{ $unapprovedRequest->start_time ? \Carbon\Carbon::parse($unapprovedRequest->start_time)->format('H:i') : '' }}</p>
+                                <p class="table-data__text--start-time">{{ $unapprovedRequest->start_time ? \Carbon\Carbon::parse($unapprovedRequest->start_time)->format('H:i') : '' }}</p>
                                 <span class="wave-dash">～</span>
-                                <p class="table-data__text--time">{{ $unapprovedRequest->end_time ? \Carbon\Carbon::parse($unapprovedRequest->end_time)->format('H:i') : '' }}</p>
+                                <p class="table-data__text--end-time">{{ $unapprovedRequest->end_time ? \Carbon\Carbon::parse($unapprovedRequest->end_time)->format('H:i') : '' }}</p>
                             </div>
                         @else
                             <div class="table-data__inner">
@@ -75,9 +87,9 @@
                         <th class="table-header">{{ $index == 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
                         <td class="table-content--break-time">
                             <div class="table-data__inner">
-                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTimeRequest->start_time)->format('H:i') }}</p>
+                                <p class="table-data__text--start-time">{{ \Carbon\Carbon::parse($breakTimeRequest->start_time)->format('H:i') }}</p>
                                 <span class="wave-dash">～</span>
-                                <p class="table-data__text--time">{{ \Carbon\Carbon::parse($breakTimeRequest->end_time)->format('H:i') }}</p>
+                                <p class="table-data__text--end-time">{{ \Carbon\Carbon::parse($breakTimeRequest->end_time)->format('H:i') }}</p>
                             </div>
                         </td>
                     </tr>
@@ -159,7 +171,7 @@
                         @if($hasUnapprovedRequest)
                             <p class="table-data__text--note">{{ $unapprovedRequest->note ? $unapprovedRequest->note : '' }}</p>
                         @else
-                            <textarea class="table-data__textarea" name="note" id="note">{{ old('note') }}</textarea>
+                            <textarea class="table-data__textarea" name="note" id="note">{{ old('note', $attendance->note ? $attendance->note : '') }}</textarea>
                             <p class="form__error">
                                 @error('note')
                                     {{ $message }}

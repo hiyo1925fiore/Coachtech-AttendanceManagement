@@ -12,7 +12,8 @@
     color: #842029;
 }
 
-.content {
+.detail-content {
+    min-height: calc(100vh - 80px);
     font-family: "Inter";
     font-optical-sizing: auto;
     font-style: normal;
@@ -44,6 +45,7 @@
 .attendance-detail__table {
     width: 100%;
     background-color: #fff;
+    letter-spacing: 0.15em;
     border-radius: 10px;
 }
 
@@ -74,12 +76,21 @@
 }
 
 .table-data__text,
-.table-data__text--time,
+.table-data__text--start-time,
+.table-data__text--end-time,
 .wave-dash {
     margin: 0;
     font-size: 16px;
     font-weight: 700;
     color: #000;
+}
+
+.table-data__text--start-time {
+    padding-left: 24px;
+}
+
+.table-data__text--end-time {
+    padding-right: 24px;
 }
 
 .table-content--date {
@@ -108,6 +119,7 @@
     font-size: 16px;
     font-weight: 700;
     color: #000;
+    letter-spacing: 0.15em;
     border: 1px solid #e1e1e1;
     border-radius: 4px;
     text-align: center;
@@ -147,7 +159,7 @@
     display: flex;
     align-items: center;
     margin: 0;
-    padding: 0 0 9px;
+    padding: 0 24px 9px;
     font-size: 14px;
     font-weight: 700;
 }
@@ -156,8 +168,10 @@
     width: 316px;
     height: 72px;
     padding: 9px 13px;
+    font-family: "Inter";
     font-size: 14px;
     font-weight: 700;
+    letter-spacing: 0.15em;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
     resize: none;
@@ -167,6 +181,7 @@
     margin: 25px 0 0;
     font-size: 18px;
     font-weight: 800;
+    letter-spacing: 0.15em;
     color: rgba(255, 0, 0, 0.5);
     text-align: right;
 }
@@ -181,6 +196,18 @@
     width: 130px;
     height: 100%;
     background-color: #000;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.correction-request-form__button-approved {
+    width: 130px;
+    height: 100%;
+    background-color: #696969;
     font-size: 22px;
     font-weight: 700;
     color: #fff;
