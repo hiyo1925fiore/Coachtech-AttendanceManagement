@@ -81,12 +81,10 @@ MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 ## テストアカウント
 - name: 一般ユーザー1
 - email: general1@example.com
-- password: password
-
+- password: password  
 - name: 一般ユーザー2
 - email: general2@example.com
-- password: password
-
+- password: password  
 - name: 管理者ユーザー
 - email: admin@example.com
 - password: password
