@@ -79,3 +79,6 @@ MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 |updated_at|timestamp| | | | |
 ## ER図
 ## テストアカウント
+- name: 一般ユーザー1
+- email: general1@example.com
+- password: password
