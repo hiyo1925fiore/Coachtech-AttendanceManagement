@@ -77,3 +77,5 @@ MAIL_FROM_ADDRESSは任意のメールアドレスを入力してください。
 |end_time|time| | |○| |
 |created_at|timestamp| | | | |
 |updated_at|timestamp| | | | |
+## ER図
+## テストアカウント
