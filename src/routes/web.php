@@ -22,9 +22,11 @@ Route::post('/register', [UserController::class, 'storeUser']);
 Route::post('/login', [UserController::class, 'loginUser']);
 // 管理者ログイン画面(GET) - 初回表示用
 Route::get('/admin/login', [UserController::class, 'showAdminLogin'])
-    ->name('admin.login');
+    ->name('admin.login')
+    ->middleware('redirect.if.admin');
 // 管理者ログイン画面(POST) - ログイン
-Route::post('/admin/login', [UserController::class, 'loginAdminUser']);
+Route::post('/admin/login', [UserController::class, 'loginAdminUser'])
+    ->middleware('redirect.if.admin');
 
 // 一般ユーザー用画面
 Route::middleware('auth')->group(function () {

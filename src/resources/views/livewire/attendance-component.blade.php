@@ -32,7 +32,7 @@
     // ページロード時に確実にステータスを設定
     document.addEventListener('DOMContentLoaded', function() {
         console.log('[Attendance Component] DOMContentLoaded fired');
-        
+
         const statusElement = document.getElementById('attendance-status-data');
         if (statusElement && window.headerStatusManager) {
             const currentStatus = statusElement.getAttribute('data-current-status');
@@ -49,7 +49,7 @@
     // Livewireイベントも継続して監視（リアルタイム更新用）
     document.addEventListener('livewire:load', function () {
         console.log('[Attendance Component] Livewire loaded');
-        
+
         @this.on('statusUpdated', function(status) {
             console.log('[Attendance Component] Livewire statusUpdated event received:', status);
             if (window.headerStatusManager) {
