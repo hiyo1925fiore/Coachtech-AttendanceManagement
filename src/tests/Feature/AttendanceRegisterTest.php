@@ -823,4 +823,15 @@ class AttendanceRegisterTest extends TestCase
         // テスト時刻をリセット
         Carbon::setTestNow();
     }
+
+    /**
+     * 補助テスト: 未ログインユーザーのアクセステスト
+     */
+    public function test_unauthenticated_user_cannot_access_attendance_register_screen()
+    {
+        $response = $this->get('/attendance');
+
+        // ログインページにリダイレクトされることを確認
+        $response->assertRedirect('/login');
+    }
 }
