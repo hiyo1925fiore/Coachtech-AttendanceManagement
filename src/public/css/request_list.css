@@ -65,17 +65,13 @@
     border-bottom: 3px solid #e1e1e1;
 }
 
-.table-header,
-.table-header--status {
-    text-align: left;
-}
-
-.table-header--status {
-    padding-left: 55px;
+.table-header--detail {
+    padding-right: 37px;
 }
 
 .list__table--row {
     height: 47px;
+    text-align: center;
 }
 
 .list__table--row:not(:last-child) {
@@ -83,12 +79,11 @@
 }
 
 .table-content--status {
-    width: 180px;
-    padding-left: 37px;
+    width: 146px;
 }
 
 .table-content--name {
-    width: 125px;
+    width: 145px;
 }
 
 .table-content--date {
@@ -101,7 +96,8 @@
 }
 
 .table-content--detail {
-    width: 122px;
+    width: 136px;
+    padding-right: 37px;
 }
 
 .detail-link {

@@ -23,12 +23,8 @@ class UserController extends Controller
             'is_admin'=> 0,
         ]);
 
-        // メール認証通知を送信
-        //event(new Registered($user));
-
         Auth::login($user);
 
-        //return redirect()->route('verification.notice');
         return redirect()->route('attendance.register');
     }
 
@@ -39,11 +35,6 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
         $credentials['is_admin'] = 0;
         if(Auth::attempt($credentials)){
-            // メール認証が済んでいない場合
-            //if (!Auth::user()->hasVerifiedEmail()) {
-                //return redirect()->route('verification.notice');
-            //}
-
             return redirect('/attendance');
         }
 
@@ -67,11 +58,6 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
         $credentials['is_admin'] = 1;
         if(Auth::attempt($credentials)){
-            // メール認証が済んでいない場合
-            //if (!Auth::user()->hasVerifiedEmail()) {
-                //return redirect()->route('verification.notice');
-            //}
-
             return redirect('/admin/attendances');
         }
 

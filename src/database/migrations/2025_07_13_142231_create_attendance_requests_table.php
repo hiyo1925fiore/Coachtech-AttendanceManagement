@@ -20,7 +20,7 @@ class CreateAttendanceRequestsTable extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('note');
-            $table->boolean('is_approved');
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }

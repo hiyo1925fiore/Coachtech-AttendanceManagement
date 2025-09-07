@@ -259,33 +259,6 @@ class LoginTest extends TestCase
 
     /**
      * テストケース2: ログイン認証機能（一般ユーザー）
-     * メール未認証ユーザーのログインテスト（もしメール認証が必要な場合）
-     */
-    public function test_unverified_general_user_cannot_login()
-    {
-        // メール未認証の一般ユーザーを作成
-        $user = User::factory()->create([
-            'name' => 'テストユーザー',
-            'email' => 'unverified@example.com',
-            'password' => Hash::make('password123'),
-            'email_verified_at' => null, // メール未認証
-            'is_admin' => 0,
-        ]);
-
-        $loginData = [
-            'email' => $user->email,
-            'password' => 'password123',
-        ];
-
-        $response = $this->post('/login', $loginData);
-
-        // メール認証が必要な場合の処理（アプリケーションの設定による）
-        // 認証されていないことを確認
-        $this->assertGuest();
-    }
-
-    /**
-     * テストケース2: ログイン認証機能（一般ユーザー）
      * 既にログイン済みの一般ユーザーがログインページにアクセスした場合、勤怠登録画面が表示される
      */
     public function test_authenticated_general_user_is_redirected_from_login_page()
@@ -518,33 +491,6 @@ class LoginTest extends TestCase
 
         // 認証されたユーザーが正しいことを確認
         $this->assertEquals($adminUser->id, auth()->id());
-    }
-
-    /**
-     * テストケース3: ログイン認証機能（管理者）
-     * メール未認証ユーザーのログインテスト（もしメール認証が必要な場合）
-     */
-    public function test_unverified_admin_user_cannot_login()
-    {
-        // メール未認証の管理者を作成
-        $adminUser = User::factory()->create([
-            'name' => 'テストユーザー',
-            'email' => 'unverified@example.com',
-            'password' => Hash::make('password123'),
-            'email_verified_at' => null, // メール未認証
-            'is_admin' => 1,
-        ]);
-
-        $loginData = [
-            'email' => $adminUser->email,
-            'password' => 'password123',
-        ];
-
-        $response = $this->post('/admin/login', $loginData);
-
-        // メール認証が必要な場合の処理（アプリケーションの設定による）
-        // 認証されていないことを確認
-        $this->assertGuest();
     }
 
     /**

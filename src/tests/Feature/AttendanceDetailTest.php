@@ -312,6 +312,7 @@ class AttendanceDetailTest extends TestCase
 
         // 2. 勤怠詳細ページを開く
         $response = $this->get("/attendance/detail/{$this->testDate}");
+        $response->assertStatus(200);
 
         // 3. 複数の休憩時間が表示されることを確認
         $response->assertStatus(200);
@@ -451,10 +452,12 @@ class AttendanceDetailTest extends TestCase
 
     /**
      * テストケース13: 勤怠詳細情報取得・修正機能（管理者）
-     * 補助テスト: 指定した一般ユーザー・日付で勤怠データが存在しない場合、空のインスタンスが作成される
+     * 補助テスト: 指定した一般ユーザー・日付で勤怠データが存在しない場合、空のインスタンスが作成される（新規作成用）
      */
     public function test_empty_instance_created_when_attendance_data_not_exists_by_admin_screen()
     {
+        $nonExistentDate = '2023-12-31';
+
         // 1. 管理者ユーザーにログインする
         Auth::login($this->adminUser);
 
@@ -462,18 +465,26 @@ class AttendanceDetailTest extends TestCase
         // テスト用に、勤怠一覧画面（管理者）から遷移した場合を想定（本番では想定されない）
         $response = $this->withSession([
             'selected_attendance_user_id' => $this->user->id,
-            'selected_attendance_date' => $this->testDate
+            'selected_attendance_date' => $nonExistentDate
         ])
-            ->get("/admin/attendances/{$this->testDate}");
+            ->get("/admin/attendances/{$nonExistentDate}");
 
         // 3. ページが正常に表示されることを確認
         $response->assertStatus(200);
+        $response->assertViewIs('admin.admin_attendance_detail');
         $response->assertSee($this->user->name);
         $response->assertViewHas('attendance');
+
+        // 新しい勤怠インスタンスが作成されていることを確認
+        $response->assertViewHas('attendance', function ($attendance) use ($nonExistentDate) {
+            return $attendance->user_id === $this->user->id &&
+                $attendance->date->format('Y-m-d') === $nonExistentDate;
+        });
 
         // 空の入力フィールドが表示される
         $response->assertSee('name="start_time"', false);
         $response->assertSee('name="end_time"', false);
+        $response->assertSee('name="note"', false);
     }
 
     /**
@@ -551,6 +562,83 @@ class AttendanceDetailTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('break_start_time[0]', false);
         $response->assertSee('break_end_time[0]', false);
+    }
+
+    /**
+     * テストケース13: 勤怠詳細情報取得・修正機能（管理者）
+     * 補助テスト: 全ての一般ユーザーの勤怠情報にアクセス可能
+     */
+    public function test_can_access_all_attendance_data()
+    {
+        // 別の一般ユーザー（ユーザー2）を作成
+        $otherUser = User::factory()->create([
+            'email_verified_at' => now(),
+            'is_admin' => 0,
+        ]);
+
+        // 別の一般ユーザーの勤怠情報を作成
+        $otherAttendance = Attendance::create([
+            'user_id' => $otherUser->id,
+            'date' => $this->testDate,
+            'start_time' => '09:00:00',
+            'end_time' => '18:00:00',
+        ]);
+
+        // 管理者ユーザーでログイン
+        Auth::login($this->adminUser);
+
+        // 勤怠詳細画面（管理者）にアクセス
+        // セッションで一般ユーザー（ユーザー1）のIDと日付を指定する
+        $response = $this->withSession([
+            'selected_attendance_user_id' => $this->user->id,
+            'selected_attendance_date' => $this->testDate
+        ])
+            ->get("/admin/attendances/{$this->testDate}");
+
+        // 正常にアクセスできることを確認
+        $response->assertStatus(200);
+        $response->assertViewIs('admin.admin_attendance_detail');
+
+        // ビューに渡されるattendanceオブジェクトがユーザー1のものであることを確認
+        $response->assertViewHas('attendance', function ($attendance) {
+            return $attendance->user_id === $this->user->id;
+        });
+
+        // ユーザー2の勤怠時間（09:00, 18:00）は表示されない
+        // （ユーザー1には該当日付の勤怠データがないため、空のインスタンスまたはデフォルト値が表示される）
+        $attendanceData = $response->viewData('attendance');
+        if ($attendanceData->start_time) {
+            $this->assertNotEquals('09:00:00', $attendanceData->start_time->format('H:i:s'));
+        }
+        if ($attendanceData->end_time) {
+            $this->assertNotEquals('18:00:00', $attendanceData->end_time->format('H:i:s'));
+        }
+
+        // 勤怠詳細画面（管理者）にアクセス
+        // セッションで別の一般ユーザー（ユーザー2）のIDと日付を指定する
+        $otherUserResponse = $this->withSession([
+            'selected_attendance_user_id' => $otherUser->id,
+            'selected_attendance_date' => $this->testDate
+        ])
+            ->get("/admin/attendances/{$this->testDate}");
+
+        // 正常にアクセスできることを確認
+        $otherUserResponse->assertStatus(200);
+        $otherUserResponse->assertViewIs('admin.admin_attendance_detail');
+
+        // ビューに渡されるattendanceオブジェクトがユーザー2のものであることを確認
+        $otherUserResponse->assertViewHas('attendance', function ($otherAttendance) use($otherUser) {
+            return $otherAttendance->user_id === $otherUser->id;
+        });
+
+        // ユーザー2の勤怠時間（09:00, 18:00）が表示されること
+        $otherAttendanceData = $otherUserResponse->viewData('attendance');
+        if ($otherAttendanceData->start_time) {
+            $this->assertEquals('09:00:00', $otherAttendanceData->start_time->format('H:i:s'));
+        }
+        if ($otherAttendanceData->end_time) {
+            $this->assertEquals('18:00:00', $otherAttendanceData->end_time->format('H:i:s'));
+        }
     }
 
     /**
