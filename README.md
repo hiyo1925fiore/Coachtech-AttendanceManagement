@@ -71,7 +71,8 @@ make init
 |created_at|timestamp| | | | |
 |updated_at|timestamp| | | | |
 ## ER図
-<img width="741" height="661" alt="Image" src="https://github.com/user-attachments/assets/99ef8b3f-abb8-4c54-9486-46202f8e987a" />  
+<img width="741" height="661" alt="Image" src="https://github.com/user-attachments/assets/99ef8b3f-abb8-4c54-9486-46202f8e987a" />
+  
 ## テストアカウント
 一般ユーザー1
 - email: general1@example.com
