@@ -6,7 +6,7 @@
 ```
 make init
 ```
-※使用可能なコマンドはMakeFileを参照
+※使用可能なコマンドはMakefileを参照
 ## テーブル仕様
 ### usersテーブル
 
@@ -96,3 +96,10 @@ docker-compose exec php bash
 php artisan migrate:fresh --env=testing
 ./vendor/bin/phpunit
 ```
+## 使用技術（実行環境）
+- PHP 8.4.1
+- Laravel 8.83.8
+- MySQL 8.0.26
+## URL
+- 開発環境：http://localhost/
+- phpMyAdmin：http://localhost:8080/
