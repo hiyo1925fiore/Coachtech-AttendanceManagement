@@ -5,6 +5,7 @@ init:
 	docker-compose exec php cp .env.example .env
 	docker-compose exec php php artisan key:generate
 	docker-compose exec php chmod -R 777 storage bootstrap/cache
+	sleep 10
 	@make fresh
 
 fresh:
